@@ -2,12 +2,17 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { Customer } from './entity/Customer';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config({ path: join(__dirname, '..', '.env') });
 
 export const AppDataSource = new DataSource({
   type: 'mssql',
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT || '1433'),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
@@ -18,7 +23,7 @@ export const AppDataSource = new DataSource({
   migrations: ['src/migration/**/*.ts'],
   subscribers: [],
   options: {
-    encrypt: false, // Set to true if using Azure SQL
+    encrypt: true, // Set to true if using Azure SQL
     trustServerCertificate: true, // For local development
   },
 });

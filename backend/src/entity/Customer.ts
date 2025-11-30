@@ -1,9 +1,7 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  OneToMany,
+  Column
 } from 'typeorm';
 
 @Entity('customers')
