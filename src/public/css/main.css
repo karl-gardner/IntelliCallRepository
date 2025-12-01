@@ -1,0 +1,11 @@
+body {
+  min-height: 100vh;
+}
+
+.saved-content-display pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}

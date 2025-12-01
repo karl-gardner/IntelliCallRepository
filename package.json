@@ -1,31 +1,64 @@
 {
-  "name": "intellicall",
+  "name": "intellicall-backend",
   "version": "1.0.0",
-  "description": "IntelliCall AI-powered call center platform",
-  "private": true,
-  "workspaces": [
-    "backend",
-    "frontend"
-  ],
+  "description": "IntelliCall AI-powered call center backend",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
-    "dev:backend": "npm run dev -w backend",
-    "dev:frontend": "npm run dev -w frontend",
-    "build": "npm run build -w backend && npm run build -w frontend",
-    "build:backend": "npm run build -w backend",
-    "build:frontend": "npm run build -w frontend",
-    "start": "npm run start -w backend",
-    "start:backend": "npm run start -w backend",
-    "typeorm": "npm run typeorm -w backend",
-    "migration:generate": "npm run migration:generate -w backend",
-    "migration:run": "npm run migration:run -w backend",
-    "migration:revert": "npm run migration:revert -w backend"
+    "start": "npm run clean && npm run build && start http://localhost:5006 && node dist/index.js",
+    "dev": "nodemon",
+    "clean": "rimraf dist",
+    "build": "npm run build:server && npm run build:client && npm run copy-assets",
+    "build:server": "tsc",
+    "build:client": "vite build",
+    "copy-assets": "copyfiles -u 1 \"src/views/**/*\" \"src/public/css/**/*\" dist",
+    "typeorm": "typeorm-ts-node-esm -d src/data-source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
+  },
+  "keywords": [
+    "call-center",
+    "ai",
+    "crm"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-validator": "^7.3.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.27"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.10.1",
+    "@vitejs/plugin-legacy": "^7.2.1",
+    "copyfiles": "^2.4.1",
+    "nodemon": "^3.1.11",
+    "rimraf": "^6.1.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
   },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+  "nodemonConfig": {
+    "watch": ["src"],
+    "ext": "ts,tsx,js,jsx,json,ejs,css,html",
+    "exec": "npm run clean && npm run build && node dist/index.js",
+    "delay": "5000"
   }
 }

@@ -32,3 +32,6 @@ data/
 
 # Coverage
 coverage/
+
+# Old backend folder (moved to root)
+backend/
