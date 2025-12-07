@@ -20,7 +20,7 @@ export const AppDataSource = new DataSource({
   // synchronize: true,
   logging: process.env.NODE_ENV === 'development',
   entities: [CustomerData],
-  migrations: ['./src/migrations/**/*.ts'],
+  migrations: ['./dist/migrations/**/*.js'],
   subscribers: [],
   options: {
     encrypt: true,
