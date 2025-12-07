@@ -5,7 +5,6 @@ import path from 'path';
 
 dotenv.config();
 
-// Use SQLite for testing
 const useSQLite = process.env.DB_TYPE !== 'mssql';
 
 const testDataSource = new DataSource(
@@ -47,8 +46,7 @@ async function testConnection() {
     await testDataSource.initialize();
     console.log('✓ Database connection successful!');
     console.log('✓ Database is set up and accessible');
-    
-    // Try to query the customers table to see if it exists
+
     try {
       const result = await testDataSource.query('SELECT COUNT(*) as count FROM customers');
       console.log(`✓ Found ${result[0]?.count || 0} customers in database`);

@@ -8,15 +8,13 @@ export interface AuthRequest extends Request {
   };
 }
 
-// Middleware for API routes - returns JSON errors
 export const authenticateToken = (
   req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
-  // Check for token in Authorization header (for API calls) or cookies (for SSR)
   const authHeader = req.headers['authorization'];
-  const headerToken = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  const headerToken = authHeader && authHeader.split(' ')[1];
   const cookieToken = req.cookies?.token;
   const token = headerToken || cookieToken;
 
@@ -36,7 +34,6 @@ export const authenticateToken = (
   }
 };
 
-// Middleware for page routes - redirects to login
 export const authenticatePage = (
   req: AuthRequest,
   res: Response,

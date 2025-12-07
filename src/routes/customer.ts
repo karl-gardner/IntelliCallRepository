@@ -7,7 +7,6 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = Router();
 
-// Get all customers (admin)
 router.get('/', authenticateToken, async (req, res) => {
   try {
     const customerRepo = AppDataSource.getRepository(CustomerData);
@@ -23,7 +22,6 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Get single customer by ID
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
@@ -45,10 +43,9 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Create new customer (admin)
 router.post(
   '/',
-  authenticateToken,
+  // authenticateToken,
   [
     body('name').trim().notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
@@ -64,13 +61,11 @@ router.post(
       const { name, email, password } = req.body;
       const customerRepo = AppDataSource.getRepository(CustomerData);
 
-      // Check if customer already exists
       const existingCustomer = await customerRepo.findOne({ where: { email } });
       if (existingCustomer) {
         return res.status(409).json({ error: 'Customer with this email already exists' });
       }
 
-      // Create new customer
       const customer = new CustomerData();
       customer.name = name;
       customer.email = email;

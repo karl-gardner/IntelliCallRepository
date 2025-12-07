@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   saveBtn.addEventListener('click', async () => {
     const content = textContent.value;
 
-    // Disable button and show loading state
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
 
@@ -35,10 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const data: ApiResponse = await response.json();
 
       if (response.ok) {
-        // Show success message
         showMessage('Data saved successfully!', 'success');
 
-        // Update saved content display
         if (data.textContent) {
           savedContent.innerHTML = `
             <div class="saved-content-display mb-3">
@@ -56,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Save error:', error);
       showMessage('Failed to save data. Please try again.', 'danger');
     } finally {
-      // Re-enable button
       saveBtn.disabled = false;
       saveBtn.textContent = 'Save Data';
     }

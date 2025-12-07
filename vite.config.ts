@@ -17,9 +17,7 @@ export default defineConfig({
         assetFileNames: '[name].[ext]',
       },
     },
-    // Generate sourcemaps for debugging
     sourcemap: true,
   },
-  // Empty base to ensure paths work with Express
   base: '/js/',
 });

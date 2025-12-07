@@ -9,15 +9,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { AppDataSource } from './data-source.js';
 
-// API Routes
 import authRoutes from './routes/auth.js';
 import customerRoutes from './routes/customer.js';
 import dashboardRoutes from './routes/dashboard.js';
 
-// Page Routes
 import pageRoutes from './routes/pages/index.js';
 
-// Load environment variables
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,11 +23,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -50,23 +45,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'IntelliCall API is running' });
 });
 
-// Page Routes
 app.use('/', pageRoutes);
 
-// 404 handler
 app.use((req, res) => {
   if (req.path.startsWith('/api/')) {
     res.status(404).json({ error: 'Not found' });
@@ -75,13 +65,11 @@ app.use((req, res) => {
   }
 });
 
-// Error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Error:', err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Initialize database and start server
 AppDataSource.initialize()
   .then(() => {
     console.log('✓ Database connection established');

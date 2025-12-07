@@ -7,21 +7,17 @@ import { authenticatePage, AuthRequest } from '../../middleware/auth.js';
 
 const router = Router();
 
-// Landing page
 router.get('/', (req, res) => {
   res.render('pages/landing', { title: 'Home' });
 });
 
-// Login page (GET)
 router.get('/login', (req, res) => {
-  // If already logged in, redirect to dashboard
   if (req.cookies?.token) {
     return res.redirect('/dashboard');
   }
   res.render('pages/login', { title: 'Login', error: null });
 });
 
-// Login page (POST)
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -36,7 +32,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // If customer has a password, verify it
     if (customer.password) {
       if (!password) {
         return res.render('pages/login', {
@@ -55,11 +50,10 @@ router.post('/login', async (req, res) => {
 
     const token = generateToken({ id: customer.id, email: customer.email });
 
-    // Set HTTP-only cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'strict'
     });
 
@@ -73,7 +67,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Login as customer (admin feature)
 router.post('/login-as-customer', authenticatePage, async (req: AuthRequest, res) => {
   const { customerId } = req.body;
 
@@ -101,13 +94,11 @@ router.post('/login-as-customer', authenticatePage, async (req: AuthRequest, res
   }
 });
 
-// Logout
 router.post('/logout', (req, res) => {
   res.clearCookie('token');
   res.redirect('/');
 });
 
-// Dashboard page
 router.get('/dashboard', authenticatePage, async (req: AuthRequest, res) => {
   try {
     const customerId = req.user!.id;
@@ -140,12 +131,10 @@ router.get('/dashboard', authenticatePage, async (req: AuthRequest, res) => {
   }
 });
 
-// Admin page
 router.get('/admin', async (req, res) => {
   try {
     const customerRepo = AppDataSource.getRepository(CustomerData);
 
-    // Get all customers
     const customers = await customerRepo.find({
       select: ['id', 'name', 'email', 'createdAt'],
       order: { createdAt: 'DESC' },
@@ -166,7 +155,6 @@ router.get('/admin', async (req, res) => {
   }
 });
 
-// Privacy page
 router.get('/privacy', (req, res) => {
   res.render('pages/privacy', { title: 'Privacy Policy' });
 });

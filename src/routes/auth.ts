@@ -7,7 +7,6 @@ import { generateToken } from '../utils/jwt.js';
 
 const router = Router();
 
-// Simple login - check email and optional password
 router.post(
   '/login',
   [
@@ -30,7 +29,6 @@ router.post(
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
-      // If customer has a password, verify it
       if (customer.password) {
         if (!password) {
           return res.status(401).json({ error: 'Password required' });
@@ -59,7 +57,6 @@ router.post(
   }
 );
 
-// Admin login as customer - for impersonation
 router.post(
   '/login-as-customer',
   [body('customerId').isUUID().withMessage('Valid customer ID required')],

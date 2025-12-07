@@ -17,13 +17,12 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  synchronize: process.env.NODE_ENV === 'development', // Auto-create tables in development
   logging: process.env.NODE_ENV === 'development',
   entities: [CustomerData],
   migrations: ['./src/migrations/**/*.ts'],
   subscribers: [],
   options: {
-    encrypt: true, // Set to true if using Azure SQL
-    trustServerCertificate: true, // For local development
+    encrypt: true,
+    trustServerCertificate: true,
   },
 });

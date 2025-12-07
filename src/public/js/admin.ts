@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
       password: (formData.get('password') as string) || undefined
     };
 
-    // Disable submit button
     submitBtn.disabled = true;
     submitBtn.textContent = 'Adding...';
 
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showMessage('Customer added successfully!', 'success');
         addCustomerForm.reset();
 
-        // Add new customer to table
         if (result.id && result.name && result.email && result.createdAt) {
           addCustomerToTable({
             id: result.id,
@@ -65,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
             createdAt: result.createdAt
           });
 
-          // Update customer count
           const currentCount = parseInt(customerCount.textContent || '0');
           customerCount.textContent = (currentCount + 1).toString();
         }

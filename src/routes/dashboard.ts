@@ -6,7 +6,6 @@ import { authenticateToken, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
 
-// Get dashboard data for the authenticated customer
 router.get('/', authenticateToken, async (req: AuthRequest, res) => {
   try {
     const customerId = req.user!.id;
@@ -30,7 +29,6 @@ router.get('/', authenticateToken, async (req: AuthRequest, res) => {
   }
 });
 
-// Save dashboard data for the authenticated customer
 router.put(
   '/',
   authenticateToken,
@@ -68,7 +66,6 @@ router.put(
   }
 );
 
-// Get dashboard data for specific customer by ID (admin)
 router.get('/:customerId', authenticateToken, async (req, res) => {
   try {
     const { customerId } = req.params;
