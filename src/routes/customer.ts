@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { AppDataSource } from '../data-source.js';
 import { CustomerData } from '../entity/CustomerData.js';
 import { authenticateToken } from '../middleware/auth.js';
+import Retell from 'retell-sdk';
 
 const router = Router();
 
@@ -78,32 +79,22 @@ router.post(
         customer.password = await bcrypt.hash(password, 10);
       }
 
-      // Create knowledge base in Retell AI
-      try {
-        const retellResponse = await fetch('https://api.retellai.com/create-knowledge-base', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.RETELL_API_KEY}`,
-            'Content-Type': 'application/json',
+      const client = new Retell({ apiKey: process.env.RETELL_API_KEY ?? ""});
+      const knowledgeBaseResponse = await client.knowledgeBase.create({
+        knowledge_base_name: companyname,
+        knowledge_base_texts: [
+          {
+            text: "Hello, how are you?",
+            title: "Sample Question",
           },
-          body: JSON.stringify({
-            knowledge_base_name: companyname,
-            knowledge_base_urls: [website],
-            enable_auto_refresh: true,
-          }),
-        });
+        ],
+        knowledge_base_urls: [website],
+        enable_auto_refresh: true
+      });
 
-        if (retellResponse.ok) {
-          const retellData = await retellResponse.json() as { knowledge_base_id?: string; id?: string };
-          customer.knowledgeBaseId = retellData.knowledge_base_id || retellData.id;
-          console.log('Knowledge base created:', customer.knowledgeBaseId);
-        } else {
-          console.error('Failed to create Retell AI knowledge base:', await retellResponse.text());
-        }
-      } catch (retellError) {
-        console.error('Retell AI API error:', retellError);
-        // Continue with customer creation even if knowledge base creation fails
-      }
+      console.log(knowledgeBaseResponse.knowledge_base_id);
+      customer.knowledgeBaseId = knowledgeBaseResponse.knowledge_base_id;
+
 
       await customerRepo.save(customer);
 
