@@ -5,15 +5,16 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "start": "npm run build && start http://localhost:5006 && node dist/index.js",
+    "start": "node dist/index.js",
+    "start:local": "npm run clean && npm run build && node dist/index.js",
     "dev": "nodemon",
-    "build": "npm run clean && tsc && vite build && npm run copy-assets",
     "clean": "rimraf dist",
+    "build": "tsc && vite build && npm run copy-assets",
     "copy-assets": "copyfiles -u 1 \"src/views/**/*\" \"src/public/css/**/*\" dist",
     "typeorm": "typeorm-ts-node-esm -d src/data-source.ts",
     "migration:generate": "npm run typeorm -- migration:generate",
-    "migration:run": "npm run build && npm run typeorm -- migration:run",
-    "migration:revert": "npm run build && npm run typeorm -- migration:revert"
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "keywords": [
     "call-center",
