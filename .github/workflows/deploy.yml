@@ -1,4 +1,4 @@
-name: Deploy Node.js App to Azure (Free Plan)
+name: Build and Deploy Node App
 
 on:
   push:
@@ -10,35 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the code
-      - name: Checkout Code
+      # 1️⃣ Checkout your code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Node.js 24
-      - name: Setup Node
+      # 2️⃣ Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.11.1'
+          node-version: '24'
 
-      # 3. Install dependencies
-      - name: Install Dependencies
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
         run: npm install
 
-      # 4. Build the app if applicable
-      - name: Build App
-        run: npm run build --if-present
+      # 4️⃣ Build your project (TypeScript + Vite + copy assets)
+      - name: Build project
+        run: npm run build
 
-      # 5. Log in to Azure using Service Principal
+      # 5️⃣ Create deployment zip (include dist, node_modules, package.json)
+      - name: Create deployment zip
+        run: zip -r release.zip dist node_modules package.json package-lock.json
+
+      # 6️⃣ Login to Azure
       - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6. Deploy app using Azure CLI (works on Free Plan)
-      - name: Deploy to Azure Web App
-        run: |
-          az webapp up \
-            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --runtime "NODE|24-lts" \
-            --location "Canada Central"
+      # 7️⃣ Deploy ZIP to
