@@ -1,4 +1,4 @@
-name: Deploy Node.js App to Azure (Free Plan)
+name: Deploy Node.js App to Azure
 
 on:
   push:
