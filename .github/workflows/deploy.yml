@@ -1,4 +1,4 @@
-name: Deploy Node.js App to Azure
+name: Build and Deploy Node App
 
 on:
   push:
@@ -10,35 +10,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the code
-      - name: Checkout Code
+      # Checkout the repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Node.js 24
-      - name: Setup Node
+      # Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.11.1'
+          node-version: '24'
 
-      # 3. Install dependencies
-      - name: Install Dependencies
+      # Install dependencies
+      - name: Install dependencies
         run: npm install
 
-      # 4. Build the app if applicable
-      - name: Build App
-        run: npm run build --if-present
+      # Build project (TypeScript + Vite + copy assets)
+      - name: Build project
+        run: npm run build
 
-      # 5. Log in to Azure using Service Principal
+      # Create deployment ZIP
+      - name: Create deployment zip
+        run: zip -r release.zip dist node_modules package.json package-lock.json
+
+      # Upload ZIP as artifact (optional, for inspection)
+      - name: Upload release.zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-zip
+          path: release.zip
+
+      # Login to Azure
       - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6. Deploy app using Azure CLI (works on Free Plan)
+      # Deploy ZIP to Azure Web App
       - name: Deploy to Azure Web App
-        run: |
-          az webapp up \
-            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --runtime "NODE|24-lts" \
-            --location "Canada Central"
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: release.zip
