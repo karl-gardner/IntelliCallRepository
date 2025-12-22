@@ -9,7 +9,8 @@
       "program": "${workspaceFolder}/dist/index.js",
       "cwd": "${workspaceFolder}",
       "env": {
-        "NODE_ENV": "development"
+        "NODE_ENV": "development",
+        "PORT": "5006"
       },
       "sourceMaps": true,
       "outFiles": [

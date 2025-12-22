@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,8 +13,6 @@ import customerRoutes from './routes/customer.js';
 import dashboardRoutes from './routes/dashboard.js';
 
 import pageRoutes from './routes/pages/index.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,7 +34,7 @@ app.use(helmet({
   },
 }));
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: 'http://localhost:3000',
   credentials: true,
 }));
 app.use(morgan('dev'));

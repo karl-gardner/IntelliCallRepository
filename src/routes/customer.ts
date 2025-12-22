@@ -79,7 +79,7 @@ router.post(
         customer.password = await bcrypt.hash(password, 10);
       }
 
-      const client = new Retell({ apiKey: process.env.RETELL_API_KEY ?? ""});
+      const client = new Retell({ apiKey: "key_9b9cc0b4b0ffd0bf53b89dc2a4e4"}); // Add in KeyVault later
       const knowledgeBaseResponse = await client.knowledgeBase.create({
         knowledge_base_name: companyname,
         knowledge_base_texts: [
