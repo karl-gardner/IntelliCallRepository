@@ -70,20 +70,14 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
   res.status(500).json({ error: 'Internal server error' });
 });
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('✓ Database connection established');
-    console.log('✓ TypeORM initialized successfully');
+try {
+  await AppDataSource.initialize()
+} catch (error) {
+  console.log(error)
+}
 
-    app.listen(PORT, () => {
-      console.log(`✓ IntelliCall API server running on port ${PORT}`);
-      console.log(`✓ Environment: ${process.env.NODE_ENV}`);
-      console.log(`✓ CORS enabled for: ${process.env.CORS_ORIGIN}`);
-    });
-  })
-  .catch((error) => {
-    console.error('✗ Error during database initialization:', error);
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`✓ IntelliCall API server running on port ${PORT}`);
+});
 
 export default app;
