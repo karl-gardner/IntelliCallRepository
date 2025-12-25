@@ -6,10 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "start:local": "npm run clean && npm run build && node dist/index.js",
     "dev": "nodemon",
     "clean": "rimraf dist",
-    "build": "tsc && vite build && npm run copy-assets",
+    "build": "npm run clean tsc && vite build && npm run copy-assets",
     "copy-assets": "copyfiles -u 1 \"src/views/**/*\" \"src/public/css/**/*\" dist",
     "typeorm": "typeorm-ts-node-esm -d src/data-source.ts",
     "migration:generate": "npm run typeorm -- migration:generate",
